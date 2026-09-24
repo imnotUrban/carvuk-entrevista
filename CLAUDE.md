@@ -39,6 +39,8 @@ entrevista/
 │   └── lib/
 │       ├── api.ts                # cliente fetch tipado hacia el backend
 │       └── types.ts
+├── specs/                       # specs de casos de uso (spec driven development)
+│   └── README.md                # plantilla y convenciones
 ├── docker-compose.yml            # SOLO levanta PostgreSQL
 └── CLAUDE.md
 ```
@@ -69,6 +71,17 @@ Se mantienen las 4 capas (`entity` → `repository` → `service` → `delivery`
 
 La entidad usa `gorm.DeletedAt` (columna `deleted_at`). `DELETE` en la API **nunca borra la fila físicamente**: hace `UPDATE ... SET deleted_at = now()`. Los listados/Get filtran automáticamente `deleted_at IS NULL`.
 
+## Specs (spec driven development)
+
+Los specs viven en `specs/`, un archivo por caso de uso: `specs/NNNN-nombre-corto.md` (numeración correlativa), siguiendo la plantilla de `specs/README.md`.
+
+Cuando el usuario diga algo como "hagamos spec driven development" y aporte un caso de uso:
+
+1. **Especificar:** redactar el spec entre los dos, haciendo preguntas para cerrar dudas (reglas de negocio, errores, alcance). Guardarlo en `specs/` con estado `draft`. No escribir código todavía.
+2. **Aprobar:** iterar hasta que el usuario lo apruebe explícitamente; pasar el estado a `aprobado`.
+3. **Implementar:** solo tras la aprobación, implementar siguiendo el spec y la arquitectura de este documento (incluyendo tests por cada criterio de aceptación). Si durante la implementación el spec resulta incorrecto o incompleto, actualizarlo y avisar.
+4. **Cerrar:** marcar los criterios cumplidos y pasar el estado a `implementado`.
+
 ## Endpoints
 
 Base URL: `http://localhost:8080/api/v1`
@@ -88,7 +101,7 @@ Respuestas de error: `400` validación, `404` no encontrado, `409` código dupli
 ## Base de datos
 
 - **Migraciones SQL** en `backend/migrations/` (`0001_create_boilerplate`): `CREATE TABLE`, índices y un índice único parcial `idx_boilerplate_code_active` (`code` único solo entre registros no borrados, así se puede reutilizar el código de uno soft-deleteado).
-- En desarrollo, `main.go` corre `AutoMigrate` de GORM al arrancar y luego ejecuta explícitamente el `CREATE UNIQUE INDEX ... WHERE deleted_at IS NULL` (GORM no puede expresarlo con `AutoMigrate`), espejando `0001_create_boilerplate.up.sql`. `entity.Boilerplate.Code` **no** tiene `uniqueIndex` de GORM (rompería el soft delete); la unicidad se garantiza con el índice parcial + validación en `service`.
+- En desarrollo, `main.go` solo corre `AutoMigrate` de GORM al arrancar. `entity.Boilerplate.Code` **no** tiene `uniqueIndex` de GORM (rompería el soft delete); la unicidad se garantiza solo con la validación en `service`. El índice parcial `idx_boilerplate_code_active` existe únicamente en la migración SQL (no lo crea `AutoMigrate`).
 - El SQL en `migrations/` es la referencia canónica del esquema; si se reemplaza `AutoMigrate` por `golang-migrate`, esos archivos sirven tal cual.
 
 ## Cómo correr el proyecto

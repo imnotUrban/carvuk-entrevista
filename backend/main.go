@@ -27,17 +27,6 @@ func main() {
 		log.Fatalf("failed to run auto migrations: %v", err)
 	}
 
-	// AutoMigrate cannot express a partial unique index, so it's applied
-	// separately here. It mirrors migrations/0001_create_boilerplate.up.sql and
-	// keeps a soft-deleted row's code free for reuse.
-	if err := db.Exec(`
-		CREATE UNIQUE INDEX IF NOT EXISTS idx_boilerplate_code_active
-		ON boilerplate (code)
-		WHERE deleted_at IS NULL
-	`).Error; err != nil {
-		log.Fatalf("failed to create partial unique index on boilerplate.code: %v", err)
-	}
-
 	router := delivery.NewRouter(db)
 
 	port := os.Getenv("PORT")
