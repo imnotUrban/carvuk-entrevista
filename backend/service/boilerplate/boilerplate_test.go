@@ -192,7 +192,6 @@ func TestSoftDelete(t *testing.T) {
 		t.Fatalf("expected empty list after delete, got %d", total)
 	}
 
-	// Row still exists physically (soft delete).
 	var count int64
 	db.Unscoped().Model(&entity.Boilerplate{}).Where("id = ?", created.ID).Count(&count)
 	if count != 1 {

@@ -1,7 +1,3 @@
-// Package httpkit holds the HTTP response shapes and error mapping shared by
-// every delivery/<entity> package, so handlers stay consistent without the
-// delivery subpackages having to import each other (or the delivery root
-// package, which would create an import cycle with router.go).
 package httpkit
 
 import (
@@ -24,8 +20,6 @@ type PaginatedResponse struct {
 	Limit int         `json:"limit"`
 }
 
-// HandleServiceError maps a domain error returned by a service to the
-// appropriate HTTP status code and writes the response.
 func HandleServiceError(c *gin.Context, err error) {
 	switch {
 	case errors.Is(err, apperr.ErrNotFound):

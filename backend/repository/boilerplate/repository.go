@@ -1,5 +1,3 @@
-// Package boilerplate is the repository layer for boilerplate rows: only GORM
-// queries live here, split one operation per file. No business rules.
 package boilerplate
 
 import (
@@ -17,7 +15,6 @@ type Repository interface {
 	ExistsByCode(code string, excludeID uint) (bool, error)
 }
 
-// Filter holds the optional filters and pagination params for listing.
 type Filter struct {
 	Name      string
 	Code      string

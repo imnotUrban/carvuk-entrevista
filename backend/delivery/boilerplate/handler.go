@@ -1,6 +1,3 @@
-// Package boilerplate is the delivery layer for boilerplate rows: Gin handlers
-// only (bind request, call the service, map the response) split one operation
-// per file, plus a factory.go that wires the module together.
 package boilerplate
 
 import (

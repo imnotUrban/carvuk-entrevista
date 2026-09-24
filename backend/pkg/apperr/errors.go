@@ -1,5 +1,3 @@
-// Package apperr defines the domain-level errors shared across services and
-// mapped to HTTP responses by the delivery layer.
 package apperr
 
 import "errors"

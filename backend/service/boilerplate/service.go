@@ -1,5 +1,3 @@
-// Package boilerplate is the service layer for boilerplate rows: validation
-// and business rules live here, split one operation per file.
 package boilerplate
 
 import (

@@ -1,5 +1,3 @@
-// Package delivery assembles the HTTP router out of the per-entity delivery
-// modules (delivery/boilerplate), each built by its own factory.
 package delivery
 
 import (

@@ -1,6 +1,3 @@
-// Package testutil provides a shared in-memory SQLite database for the
-// service-layer test suites (service/boilerplate), so they run fast and
-// without a real PostgreSQL dependency.
 package testutil
 
 import (
@@ -12,8 +9,6 @@ import (
 	boilerplateentity "backend/entity/boilerplate"
 )
 
-// SetupDB spins up an isolated in-memory SQLite database with the same
-// schema as production (via AutoMigrate).
 func SetupDB(t *testing.T) *gorm.DB {
 	t.Helper()
 
