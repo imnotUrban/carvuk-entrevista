@@ -5,7 +5,8 @@
   },
   "variable": [
     { "key": "base_url", "value": "http://localhost:8080" },
-    { "key": "boilerplate_id", "value": "" }
+    { "key": "boilerplate_id", "value": "" },
+    { "key": "producto_id", "value": "" }
   ],
   "item": [
     {
@@ -89,6 +90,111 @@
           "request": {
             "method": "DELETE",
             "url": "{{base_url}}/api/v1/boilerplate/{{boilerplate_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Productos",
+      "item": [
+        {
+          "name": "Create producto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const body = pm.response.json();",
+                  "  pm.collectionVariables.set('producto_id', body.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/v1/productos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Leche\",\n  \"precio\": 1100,\n  \"stock\": 50\n}"
+            }
+          }
+        },
+        {
+          "name": "List productos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/productos?nombre=le&page=1&limit=10&sort_by=precio&order=desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "productos"],
+              "query": [
+                { "key": "nombre", "value": "le" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "sort_by", "value": "precio" },
+                { "key": "order", "value": "desc" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get producto",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/productos/{{producto_id}}"
+          }
+        },
+        {
+          "name": "Update producto (parcial)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/v1/productos/{{producto_id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stock\": 42\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete producto (soft delete)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/v1/productos/{{producto_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Boletas",
+      "item": [
+        {
+          "name": "Create boleta",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/v1/boletas",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    { \"producto_id\": {{producto_id}}, \"cantidad\": 2 }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "List boletas",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/boletas?page=1&limit=20&order=desc"
+          }
+        },
+        {
+          "name": "Get boleta",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/boletas/1"
           }
         }
       ]

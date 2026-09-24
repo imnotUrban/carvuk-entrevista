@@ -1,8 +1,14 @@
 import type {
+  Boleta,
+  BoletaInput,
+  BoletaListItem,
   Boilerplate,
   BoilerplateFilters,
   BoilerplateInput,
   PaginatedResponse,
+  Producto,
+  ProductoFilters,
+  ProductoInput,
 } from "./types";
 
 const API_BASE_URL =
@@ -70,6 +76,34 @@ export const boilerplateApi = {
     }),
   remove: (id: number) =>
     request<void>(`/boilerplate/${id}`, { method: "DELETE" }),
+};
+
+export const productosApi = {
+  list: (filters: ProductoFilters = {}) =>
+    request<PaginatedResponse<Producto>>(`/productos${buildQuery(filters)}`),
+  get: (id: number) => request<Producto>(`/productos/${id}`),
+  create: (input: ProductoInput) =>
+    request<Producto>("/productos", {
+      method: "POST",
+      body: JSON.stringify(input),
+    }),
+  update: (id: number, input: Partial<ProductoInput>) =>
+    request<Producto>(`/productos/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(input),
+    }),
+  remove: (id: number) => request<void>(`/productos/${id}`, { method: "DELETE" }),
+};
+
+export const boletasApi = {
+  list: (params: { page?: number; limit?: number; order?: "asc" | "desc" } = {}) =>
+    request<PaginatedResponse<BoletaListItem>>(`/boletas${buildQuery(params)}`),
+  get: (id: number) => request<Boleta>(`/boletas/${id}`),
+  create: (input: BoletaInput) =>
+    request<Boleta>("/boletas", {
+      method: "POST",
+      body: JSON.stringify(input),
+    }),
 };
 
 export { ApiError };

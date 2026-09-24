@@ -2,14 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useCart } from "@/lib/cart";
 import { cn } from "@/lib/utils";
 
 const links = [
+  { href: "/tienda", label: "Tienda" },
+  { href: "/productos", label: "Productos" },
+  { href: "/boletas", label: "Boletas" },
   { href: "/boilerplate", label: "Boilerplate" },
 ];
 
 export function NavBar() {
   const pathname = usePathname();
+  const { count } = useCart();
 
   return (
     <header className="border-b">
@@ -26,6 +31,11 @@ export function NavBar() {
               )}
             >
               {link.label}
+              {link.href === "/tienda" && count > 0 && (
+                <span className="ml-1 rounded-full bg-primary px-1.5 text-xs text-primary-foreground">
+                  {count}
+                </span>
+              )}
             </Link>
           ))}
         </div>

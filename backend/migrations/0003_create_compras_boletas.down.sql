@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS boletas;
+DROP TABLE IF EXISTS compra_items;
+DROP TABLE IF EXISTS compras;
+DROP TABLE IF EXISTS usuarios;

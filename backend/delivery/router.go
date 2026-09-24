@@ -8,6 +8,8 @@ import (
 	"gorm.io/gorm"
 
 	boilerplatedelivery "backend/delivery/boilerplate"
+	boletadelivery "backend/delivery/boleta"
+	productodelivery "backend/delivery/producto"
 )
 
 func NewRouter(db *gorm.DB) *gin.Engine {
@@ -25,6 +27,8 @@ func NewRouter(db *gorm.DB) *gin.Engine {
 
 	api := r.Group("/api/v1")
 	boilerplatedelivery.NewModule(db).RegisterRoutes(api)
+	productodelivery.NewModule(db).RegisterRoutes(api)
+	boletadelivery.NewModule(db).RegisterRoutes(api)
 
 	return r
 }

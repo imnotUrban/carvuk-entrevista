@@ -26,7 +26,7 @@ func HandleServiceError(c *gin.Context, err error) {
 		c.JSON(http.StatusNotFound, ErrorResponse{Error: err.Error()})
 	case errors.Is(err, apperr.ErrValidation):
 		c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
-	case errors.Is(err, apperr.ErrDuplicateCode):
+	case errors.Is(err, apperr.ErrDuplicateCode), errors.Is(err, apperr.ErrInsufficientStock):
 		c.JSON(http.StatusConflict, ErrorResponse{Error: err.Error()})
 	default:
 		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: "internal server error"})
