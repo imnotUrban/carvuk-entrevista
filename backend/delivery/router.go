@@ -1,0 +1,32 @@
+// Package delivery assembles the HTTP router out of the per-entity delivery
+// modules (delivery/boilerplate), each built by its own factory.
+package delivery
+
+import (
+	"net/http"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+
+	boilerplatedelivery "backend/delivery/boilerplate"
+)
+
+func NewRouter(db *gorm.DB) *gin.Engine {
+	r := gin.Default()
+
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
+	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
+	r.Use(cors.New(corsConfig))
+
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
+
+	api := r.Group("/api/v1")
+	boilerplatedelivery.NewModule(db).RegisterRoutes(api)
+
+	return r
+}

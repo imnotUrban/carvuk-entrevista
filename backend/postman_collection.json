@@ -1,0 +1,97 @@
+{
+  "info": {
+    "name": "Carvuk CRUD - Boilerplate",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8080" },
+    { "key": "boilerplate_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/health"
+      }
+    },
+    {
+      "name": "Boilerplate",
+      "item": [
+        {
+          "name": "Create boilerplate",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const body = pm.response.json();",
+                  "  pm.collectionVariables.set('boilerplate_id', body.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/v1/boilerplate",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Widget\",\n  \"code\": \"WID-001\",\n  \"status\": \"active\",\n  \"quantity\": 10,\n  \"amount\": 49.9\n}"
+            }
+          }
+        },
+        {
+          "name": "List boilerplate",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/boilerplate?page=1&limit=10&sort_by=name&order=asc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "boilerplate"],
+              "query": [
+                { "key": "name", "value": "wid", "disabled": true },
+                { "key": "code", "value": "WID", "disabled": true },
+                { "key": "status", "value": "active", "disabled": true },
+                { "key": "min_amount", "value": "10", "disabled": true },
+                { "key": "max_amount", "value": "100", "disabled": true },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "sort_by", "value": "name" },
+                { "key": "order", "value": "asc" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get boilerplate by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/boilerplate/{{boilerplate_id}}"
+          }
+        },
+        {
+          "name": "Update boilerplate",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/v1/boilerplate/{{boilerplate_id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"archived\",\n  \"quantity\": 0\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete boilerplate (soft delete)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/v1/boilerplate/{{boilerplate_id}}"
+          }
+        }
+      ]
+    }
+  ]
+}
